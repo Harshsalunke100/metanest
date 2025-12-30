@@ -2,19 +2,29 @@ from pymongo import MongoClient
 from datetime import datetime
 from bson.objectid import ObjectId
 import os
-
+import streamlit as st
 # MongoDB connection URL (local)
-MONGO_URI = "mongodb://localhost:27017/"
+# CONNECTION SETUP
+# ---------------------------------------------------------------------------
+# This logic checks if we are on the Cloud or on your Laptop
+try:
+    # Try to get the secret from Streamlit Cloud
+    MONGO_URI = st.secrets["MONGO_URI"]
+except:
+    # If fails (running locally on laptop), use your local default
+    MONGO_URI = "mongodb://localhost:27017/"
 
 # Database name
 DB_NAME = "metascan_db"
 
 # Connect to MongoDB
-client = MongoClient(MONGO_URI)
+# We add a 30s timeout so it doesn't hang forever if the link is bad
+client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=30000)
 db = client[DB_NAME]
 
 # Collection
 papers_col = db["papers"]
+users_col = db["users"] # Defined early so functions can use it
 
 def add_paper(data: dict):
     """
