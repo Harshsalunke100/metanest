@@ -3,7 +3,7 @@ from transformers import pipeline
 import subprocess
 import sys
 import re
-
+import streamlit as st
 
 def clean_text(text):
     if not text: return ""
@@ -25,20 +25,22 @@ def clean_text(text):
 
     return text
 # 1. SETUP SPACY
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-   import en_core_web_sm
-   nlp = en_core_web_sm.load()
+@st.cache_resource
+def load_spacy_model():
+    return spacy.load("en_core_web_sm")
+
+nlp = load_spacy_model()
 # 2. SETUP AI (Lazy Loading)
-_classifier = None
+@st.cache_resource
+def load_classifier():
+    return pipeline(
+        "zero-shot-classification",
+        model="valhalla/distilbart-mnli-12-1"
+    )
 
 def get_classifier():
-    global _classifier
-    if _classifier is None:
-        print("⏳ Loading AI Model... (One-time delay)")
-        _classifier = pipeline("zero-shot-classification", model="valhalla/distilbart-mnli-12-1")
-    return _classifier
+    return load_classifier()
+
 
 # 3. FAST DICTIONARY (The "Speed Layer")
 CATEGORY_RULES = {
@@ -58,7 +60,7 @@ CANDIDATE_LABELS = [
     "Cybersecurity",
     "Quantum Physics",
     "Economics & Social Science",
-    "Environmental Science"
+    "Environmental Science",
     "Research"
 ]
 
