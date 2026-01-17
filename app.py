@@ -1,6 +1,12 @@
 import streamlit as st
 from metascan.db import get_all_papers, verify_user, create_user
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+
 st.set_page_config(
     page_title="MetaScan Portal",
     page_icon="🔎",
