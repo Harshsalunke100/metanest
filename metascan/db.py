@@ -7,12 +7,11 @@ import streamlit as st
 # CONNECTION SETUP
 # ---------------------------------------------------------------------------
 # This logic checks if we are on the Cloud or on your Laptop
-try:
-    # Try to get the secret from Streamlit Cloud
-    MONGO_URI = st.secrets["MONGO_URI"]
-except:
-    # If fails (running locally on laptop), use your local default
-    MONGO_URI = "mongodb://localhost:27017/"
+if "MONGO_URI" not in st.secrets:
+    raise RuntimeError("MONGO_URI is missing in Streamlit secrets")
+
+MONGO_URI = st.secrets["MONGO_URI"]
+
 
 # Database name
 DB_NAME = "metascan_db"
