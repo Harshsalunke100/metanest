@@ -96,11 +96,18 @@ else:
             pwd = st.text_input("Password", type="password")
             submitted = st.form_submit_button("Access Admin Panel")
             
-            if submitted:
-                if user == "admin" and pwd == "admin123":
-                    login_success("admin", "admin")
-                else:
-                    st.error("Invalid Admin Credentials")
+    if submitted:
+     user_data = verify_user(user, pwd)
+
+     if not user_data:
+        st.error("Invalid credentials")
+
+     elif user_data.get("role") != "admin":
+        st.error("You are not authorized as admin")
+
+     else:
+        login_success("admin", user)
+   
 
     else:
         # USER FLOW
