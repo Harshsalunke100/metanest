@@ -8,7 +8,7 @@ load_dotenv()
 
 
 st.set_page_config(
-    page_title="MetaScan Portal",
+    page_title="MetaNest Portal",
     page_icon="🔎",
     layout="wide"
 )
@@ -78,7 +78,7 @@ else:
     # ============================================================
     # 🔴 LOGIN / REGISTER VIEW (The Gatekeeper)
     # ============================================================
-    st.title("🔐 MetaScan Access")
+    st.title("🔐 MetaNest Access")
     st.write("Please log in to access the research index.")
     
     st.write("") # Spacer
